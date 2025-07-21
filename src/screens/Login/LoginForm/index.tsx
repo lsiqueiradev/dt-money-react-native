@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { schema } from "./schema";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { useSnackbarContext } from "@/contexts/snackbar.context";
-import { AppError } from "@/shared/helpers/AppError";
+import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
 export interface FormLoginParams {
   email: string;
   password: string;
@@ -32,6 +32,7 @@ export function LoginForm() {
   });
 
   const { handleAuthenticate } = useAuthContext();
+  const { handleError } = useErrorHandler();
   const { notify } = useSnackbarContext();
 
   const navigation = useNavigation<NavigationProp<PublicStackParamList>>();
@@ -40,11 +41,7 @@ export function LoginForm() {
     try {
       await handleAuthenticate(data);
     } catch (error) {
-      if (error instanceof AppError)
-        notify({
-          message: error.message,
-          messageType: "ERROR",
-        });
+      handleError(error, "Falha ao logar");
     }
   };
 
@@ -69,7 +66,11 @@ export function LoginForm() {
       />
       <View className="flex-1 justify-between mt-8 mb-6 min-h-[250px]">
         <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
-          Login
+          {isSubmitting ? (
+            <ActivityIndicator className="text-white" />
+          ) : (
+            "Login"
+          )}
         </Button>
 
         <View>

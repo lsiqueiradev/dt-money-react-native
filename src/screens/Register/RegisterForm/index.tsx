@@ -1,7 +1,6 @@
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 
 import { PublicStackParamList } from "@/routes/PublicRoutes";
@@ -12,6 +11,7 @@ import { schema } from "./schema";
 
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
 export interface FormRegisterParams {
   email: string;
   name: string;
@@ -35,6 +35,7 @@ export function RegisterForm() {
   });
 
   const { handleRegister } = useAuthContext();
+  const { handleError } = useErrorHandler();
 
   const navigation = useNavigation<NavigationProp<PublicStackParamList>>();
 
@@ -42,7 +43,7 @@ export function RegisterForm() {
     try {
       await handleRegister(data);
     } catch (error) {
-      if (error instanceof AxiosError) console.log(error.response?.data);
+      handleError(error, "Falha ao cadastrar usuário");
     }
   };
 
@@ -84,7 +85,11 @@ export function RegisterForm() {
 
       <View className="flex-1 justify-between mt-8 mb-6 min-h-[250px]">
         <Button iconName="arrow-forward" onPress={handleSubmit(onSubmit)}>
-          Cadastrar
+          {isSubmitting ? (
+            <ActivityIndicator className="text-white" />
+          ) : (
+            "Cadastrar"
+          )}
         </Button>
 
         <View>
