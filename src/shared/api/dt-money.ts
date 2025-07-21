@@ -6,6 +6,6 @@ const baseURL = Platform.select({
   android: "http://10.0.2.2:3001",
 });
 
-const dtMoneyApi = axios.create({
+export const dtMoneyApi = axios.create({
   baseURL,
 });
