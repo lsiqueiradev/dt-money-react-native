@@ -1,13 +1,17 @@
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { PublicStackParamList } from "@/routes/PublicRoutes";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+
+import { PublicStackParamList } from "@/routes/PublicRoutes";
+
+import { useAuthContext } from "@/contexts/auth.context";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schema";
 
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
 export interface FormRegisterParams {
   email: string;
   name: string;
@@ -30,9 +34,17 @@ export function RegisterForm() {
     resolver: yupResolver(schema),
   });
 
+  const { handleRegister } = useAuthContext();
+
   const navigation = useNavigation<NavigationProp<PublicStackParamList>>();
 
-  const onSubmit = () => {};
+  const onSubmit = async (data: FormRegisterParams) => {
+    try {
+      await handleRegister(data);
+    } catch (error) {
+      if (error instanceof AxiosError) console.log(error.response?.data);
+    }
+  };
 
   return (
     <>
@@ -49,6 +61,7 @@ export function RegisterForm() {
         label="EMAIL"
         placeholder="Seu email"
         leftIconName="mail-outline"
+        autoCapitalize="none"
       />
 
       <Input
@@ -62,7 +75,7 @@ export function RegisterForm() {
 
       <Input
         control={control}
-        name="password"
+        name="confirmPassword"
         label="CONFIRME A SENHA"
         placeholder="Confirme sua senha"
         leftIconName="lock-outline"

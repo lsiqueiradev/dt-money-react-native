@@ -22,16 +22,19 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const handleAuthenticate = async (userData: FormLoginParams) => {
-    const { token, user } = await authService.authenticate(userData);
-
-    console.log({ token, user });
+  const handleAuthenticate = async (formData: FormLoginParams) => {
+    const { token, user } = await authService.authenticate(formData);
 
     setUser(user);
     setToken(token);
   };
 
-  const handleRegister = async (formData: FormRegisterParams) => {};
+  const handleRegister = async (formData: FormRegisterParams) => {
+    const { token, user } = await authService.registerUser(formData);
+
+    setUser(user);
+    setToken(token);
+  };
 
   const handleLogout = () => {};
 
