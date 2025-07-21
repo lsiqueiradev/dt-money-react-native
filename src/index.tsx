@@ -5,9 +5,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { cssInterop } from "nativewind";
 
-import '@/styles/global.css';
 import { AuthContextProvider } from "./contexts/auth.context";
 import { SnackbarContextProvider } from "./contexts/snackbar.context";
+
+import { Snackbar } from "./components/Snackbar";
+
+import '@/styles/global.css';
 
 cssInterop(MaterialIcons, {
   className: {
@@ -20,6 +23,7 @@ export function App() {
     <SnackbarContextProvider>
       <AuthContextProvider>
         <NavigationRoutes />
+        <Snackbar />
       </AuthContextProvider>
     </SnackbarContextProvider>
   );

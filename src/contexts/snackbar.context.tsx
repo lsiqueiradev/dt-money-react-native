@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 
 export type SnackbarMessageType = "ERROR" | "SUCCESS";
 
@@ -36,4 +36,13 @@ export const SnackbarContextProvider = ({ children }: PropsWithChildren) => {
       {children}
     </SnackbarContext.Provider>
   );
+};
+
+export const useSnackbarContext = () => {
+  const context = useContext(SnackbarContext);
+
+  if (!context) {
+    throw new Error("SnackbarContextProvider not exists in app");
+  }
+  return context;
 };

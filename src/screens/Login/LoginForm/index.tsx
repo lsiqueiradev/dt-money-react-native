@@ -1,7 +1,6 @@
 import { Text, View } from "react-native";
 
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 
 import { PublicStackParamList } from "@/routes/PublicRoutes";
@@ -12,6 +11,7 @@ import { schema } from "./schema";
 
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { useSnackbarContext } from "@/contexts/snackbar.context";
 import { AppError } from "@/shared/helpers/AppError";
 export interface FormLoginParams {
   email: string;
@@ -32,6 +32,7 @@ export function LoginForm() {
   });
 
   const { handleAuthenticate } = useAuthContext();
+  const { notify } = useSnackbarContext();
 
   const navigation = useNavigation<NavigationProp<PublicStackParamList>>();
 
@@ -39,8 +40,11 @@ export function LoginForm() {
     try {
       await handleAuthenticate(data);
     } catch (error) {
-      console.log(error instanceof AppError);
-      if (error instanceof AxiosError) console.log(error.response?.data);
+      if (error instanceof AppError)
+        notify({
+          message: error.message,
+          messageType: "ERROR",
+        });
     }
   };
 
