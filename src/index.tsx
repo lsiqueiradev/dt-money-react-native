@@ -7,6 +7,7 @@ import { cssInterop } from "nativewind";
 
 import '@/styles/global.css';
 import { AuthContextProvider } from "./contexts/auth.context";
+import { SnackbarContextProvider } from "./contexts/snackbar.context";
 
 cssInterop(MaterialIcons, {
   className: {
@@ -16,8 +17,10 @@ cssInterop(MaterialIcons, {
 
 export function App() {
   return (
-    <AuthContextProvider>
-      <NavigationRoutes />
-    </AuthContextProvider>
+    <SnackbarContextProvider>
+      <AuthContextProvider>
+        <NavigationRoutes />
+      </AuthContextProvider>
+    </SnackbarContextProvider>
   );
 }
