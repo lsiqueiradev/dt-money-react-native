@@ -6,6 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { cssInterop } from "nativewind";
 
 import '@/styles/global.css';
+import { AuthContextProvider } from "./contexts/auth.context";
 
 cssInterop(MaterialIcons, {
   className: {
@@ -15,6 +16,8 @@ cssInterop(MaterialIcons, {
 
 export function App() {
   return (
-    <NavigationRoutes />
+    <AuthContextProvider>
+      <NavigationRoutes />
+    </AuthContextProvider>
   );
 }
