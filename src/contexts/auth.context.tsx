@@ -1,8 +1,11 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { FormLoginParams } from "@/screens/Login/LoginForm";
 import { FormRegisterParams } from "@/screens/Register/RegisterForm";
 
+import { IAuthenticateResponse } from "@/shared/interfaces/https/authenticate-response";
 import { IUser } from "@/shared/interfaces/user-interface";
 import * as authService from "@/shared/services/dt-money/auth.service";
 
@@ -12,6 +15,7 @@ type AuthContextType = {
   handleAuthenticate: (params: FormLoginParams) => Promise<void>;
   handleRegister: (params: FormRegisterParams) => Promise<void>;
   handleLogout: () => void;
+  restoreUserSession: () => Promise<string | null>;
 };
 
 export const AuthContext = createContext<AuthContextType>(
@@ -25,6 +29,11 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const handleAuthenticate = async (formData: FormLoginParams) => {
     const { token, user } = await authService.authenticate(formData);
 
+    await AsyncStorage.setItem(
+      "dt-money-user",
+      JSON.stringify({ user, token })
+    );
+
     setUser(user);
     setToken(token);
   };
@@ -32,11 +41,29 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const handleRegister = async (formData: FormRegisterParams) => {
     const { token, user } = await authService.registerUser(formData);
 
+    await AsyncStorage.setItem(
+      "dt-money-user",
+      JSON.stringify({ user, token })
+    );
+
     setUser(user);
     setToken(token);
   };
 
-  const handleLogout = () => {};
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("dt-money-user");
+  };
+
+  const restoreUserSession = async () => {
+    const userData = await AsyncStorage.getItem("dt-money-user");
+    if (userData) {
+      const { token, user } = JSON.parse(userData) as IAuthenticateResponse;
+      setUser(user);
+      setToken(token);
+    }
+
+    return userData;
+  };
 
   return (
     <AuthContext.Provider
@@ -46,6 +73,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         handleAuthenticate,
         handleRegister,
         handleLogout,
+        restoreUserSession,
       }}
     >
       {children}
