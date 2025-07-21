@@ -25,6 +25,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const handleAuthenticate = async (userData: FormLoginParams) => {
     const { token, user } = await authService.authenticate(userData);
 
+    console.log({ token, user });
+
     setUser(user);
     setToken(token);
   };
