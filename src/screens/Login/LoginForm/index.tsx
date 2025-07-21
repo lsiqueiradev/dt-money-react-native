@@ -18,8 +18,18 @@ export function LoginForm() {
       <Input
         control={control}
         name="email"
-        label="E-mail"
+        label="EMAIL"
         placeholder="mail@mail.com"
+        leftIconName="mail-outline"
+      />
+
+      <Input
+        control={control}
+        name="password"
+        label="SENHA"
+        placeholder="Sua senha"
+        leftIconName="lock-outline"
+        secureTextEntry
       />
     </>
   );
