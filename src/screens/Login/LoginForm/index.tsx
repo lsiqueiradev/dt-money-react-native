@@ -12,6 +12,7 @@ import { schema } from "./schema";
 
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { AppError } from "@/shared/helpers/AppError";
 export interface FormLoginParams {
   email: string;
   password: string;
@@ -38,6 +39,7 @@ export function LoginForm() {
     try {
       await handleAuthenticate(data);
     } catch (error) {
+      console.log(error instanceof AppError);
       if (error instanceof AxiosError) console.log(error.response?.data);
     }
   };
