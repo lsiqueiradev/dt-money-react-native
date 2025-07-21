@@ -51,7 +51,9 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("dt-money-user");
+    await AsyncStorage.clear();
+    setUser(null);
+    setToken(null);
   };
 
   const restoreUserSession = async () => {
