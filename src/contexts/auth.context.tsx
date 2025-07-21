@@ -1,9 +1,13 @@
-import { FormLoginParams } from "@/screens/Login/LoginForm";
-import { FormRegisterParams } from "@/screens/Register/RegisterForm";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 
+import { FormLoginParams } from "@/screens/Login/LoginForm";
+import { FormRegisterParams } from "@/screens/Register/RegisterForm";
+
+import { IUser } from "@/shared/interfaces/user-interface";
+import * as authService from "@/shared/services/dt-money/auth.service";
+
 type AuthContextType = {
-  user: null;
+  user: IUser | null;
   token: string | null;
   handleAuthenticate: (params: FormLoginParams) => Promise<void>;
   handleRegister: (params: FormRegisterParams) => Promise<void>;
@@ -15,11 +19,18 @@ export const AuthContext = createContext<AuthContextType>(
 );
 
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  const handleAuthenticate = async ({ email, password }: FormLoginParams) => {};
+  const handleAuthenticate = async (userData: FormLoginParams) => {
+    const { token, user } = await authService.authenticate(userData);
+
+    setUser(user);
+    setToken(token);
+  };
+
   const handleRegister = async (formData: FormRegisterParams) => {};
+
   const handleLogout = () => {};
 
   return (
