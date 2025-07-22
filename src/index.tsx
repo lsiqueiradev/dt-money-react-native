@@ -12,6 +12,7 @@ import { SnackbarContextProvider } from "./contexts/snackbar.context";
 import { Snackbar } from "./components/Snackbar";
 
 import '@/styles/global.css';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 cssInterop(MaterialIcons, {
   className: {
@@ -21,6 +22,7 @@ cssInterop(MaterialIcons, {
 
 export function App() {
   return (
+    <GestureHandlerRootView className="flex-1">
     <SnackbarContextProvider>
       <AuthContextProvider>
         <BottomSheetProvider>
@@ -29,5 +31,6 @@ export function App() {
         </BottomSheetProvider>
       </AuthContextProvider>
     </SnackbarContextProvider>
+    </GestureHandlerRootView>
   );
 }
