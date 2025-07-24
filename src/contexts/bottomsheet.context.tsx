@@ -10,8 +10,12 @@ import {
 } from "react";
 
 import { colors } from "@/shared/colors";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { TouchableWithoutFeedback, View } from "react-native";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface BottomSheetContextType {
   openBottomSheet: (content: ReactNode, index: number) => void;
@@ -23,9 +27,9 @@ export const BottomSheetContext = createContext<BottomSheetContextType>(
 );
 
 export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
+  const { bottom } = useSafeAreaInsets();
   const [content, setContent] = useState<ReactNode | null>(null);
   const [index, setIndex] = useState(-1);
-  const [isOpen, setOpen] = useState(false);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["70%", "90%"], []);
@@ -34,7 +38,6 @@ export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
     (newContent: ReactNode, index: number) => {
       setIndex(index);
       setContent(newContent);
-      setOpen(true);
       requestAnimationFrame(() => {
         bottomSheetRef.current?.snapToIndex(index);
       });
@@ -43,27 +46,24 @@ export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
   );
 
   const closeBottomSheet = useCallback(() => {
-    setOpen(false);
     setContent(null);
     setIndex(-1);
     bottomSheetRef.current?.close();
   }, []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === -1) {
-      setOpen(false);
-    }
+  const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => {
+    return (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    );
   }, []);
 
   return (
     <BottomSheetContext.Provider value={{ openBottomSheet, closeBottomSheet }}>
       {children}
-
-      {isOpen && (
-        <TouchableWithoutFeedback onPress={closeBottomSheet}>
-          <View className="absolute top-0 left-0 right-0 bottom-0 bg-black/70 z-1" />
-        </TouchableWithoutFeedback>
-      )}
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -71,7 +71,7 @@ export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
         index={index}
         style={{ zIndex: 2 }}
         enablePanDownToClose
-        onChange={handleSheetChanges}
+        backdropComponent={renderBackdrop}
         backgroundStyle={{
           backgroundColor: colors["background-secondary"],
           borderTopLeftRadius: 32,
@@ -79,7 +79,9 @@ export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
           elevation: 8,
         }}
       >
-        <BottomSheetScrollView>{content}</BottomSheetScrollView>
+        <BottomSheetScrollView contentContainerClassName="pb-safe">
+          {content}
+        </BottomSheetScrollView>
       </BottomSheet>
     </BottomSheetContext.Provider>
   );

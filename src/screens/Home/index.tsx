@@ -5,7 +5,7 @@ import { SafeAreaView, Text, TouchableOpacity } from "react-native";
 export function Home() {
   const { handleLogout } = useAuthContext();
   return (
-    <SafeAreaView className="flex-1 bg-background-primary">
+    <SafeAreaView className="flex-1 bg-background-primary ">
       <Header />
       <TouchableOpacity onPress={handleLogout}>
         <Text>Sair</Text>
