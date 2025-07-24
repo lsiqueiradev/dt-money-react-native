@@ -78,6 +78,7 @@ export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
           borderTopRightRadius: 32,
           elevation: 8,
         }}
+        handleIndicatorStyle={{ backgroundColor: colors["white"] }}
       >
         <BottomSheetScrollView contentContainerClassName="pb-safe">
           {content}
