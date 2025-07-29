@@ -9,17 +9,43 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context";
 import { CreateTransactionInterface } from "@/shared/interfaces/https/create-transaction-resquest";
 import clsx from "clsx";
+import * as Yup from "yup";
+import { Button } from "../Button";
 import { SelectCategoryModal } from "../SelectCategoryModal";
 import { TransactionTypeSelector } from "../SelectyType";
+import { transactionSchema } from "./schema";
+
+type ValidationErrorsTypes = Record<keyof CreateTransactionInterface, string>;
 
 export function NewTransaction() {
-  const { closeBottomSheet, openBottomSheet } = useBottomSheetContext();
+  const { closeBottomSheet } = useBottomSheetContext();
+
   const [transaction, setTransaction] = useState<CreateTransactionInterface>({
     categoryId: 0,
     description: "",
     typeId: 0,
     value: 0,
   });
+  const [validationErrors, setValidationErrors] =
+    useState<ValidationErrorsTypes>();
+
+  const handleCreateTransaction = async () => {
+    try {
+      await transactionSchema.validate(transaction, { abortEarly: false });
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = {} as ValidationErrorsTypes;
+
+        error.inner.forEach((err) => {
+          if (err.path) {
+            errors[err.path as keyof CreateTransactionInterface] = err.message;
+          }
+        });
+
+        setValidationErrors(errors);
+      }
+    }
+  };
 
   const handleSetTransaction = (
     key: keyof CreateTransactionInterface,
@@ -69,6 +95,11 @@ export function NewTransaction() {
             handleSetTransaction("typeId", typeId)
           }
         />
+        <View className="my-4">
+          <Button onPress={handleCreateTransaction}>
+            <Text>Registrar</Text>
+          </Button>
+        </View>
       </View>
     </View>
   );
