@@ -1,12 +1,20 @@
 import { useState } from "react";
 
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import CurrencyInput from "react-native-currency-input";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { useBottomSheetContext } from "@/contexts/bottomsheet.context";
+import { useTransactionContext } from "@/contexts/transaction.context";
+import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
 import { CreateTransactionInterface } from "@/shared/interfaces/https/create-transaction-resquest";
 import clsx from "clsx";
 import * as Yup from "yup";
@@ -20,6 +28,10 @@ type ValidationErrorsTypes = Record<keyof CreateTransactionInterface, string>;
 
 export function NewTransaction() {
   const { closeBottomSheet } = useBottomSheetContext();
+  const { createTransaction } = useTransactionContext();
+  const { handleError } = useErrorHandler();
+
+  const [isLoading, setLoading] = useState(false);
 
   const [transaction, setTransaction] = useState<CreateTransactionInterface>({
     categoryId: 0,
@@ -32,7 +44,11 @@ export function NewTransaction() {
 
   const handleCreateTransaction = async () => {
     try {
+      setLoading(true);
+
       await transactionSchema.validate(transaction, { abortEarly: false });
+      await createTransaction(transaction);
+      closeBottomSheet();
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = {} as ValidationErrorsTypes;
@@ -44,7 +60,11 @@ export function NewTransaction() {
         });
 
         setValidationErrors(errors);
+      } else {
+        handleError(error, "Falha ao criar transação");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,7 +131,11 @@ export function NewTransaction() {
         )}
         <View className="my-4">
           <Button onPress={handleCreateTransaction}>
-            <Text>Registrar</Text>
+            {isLoading ? (
+              <ActivityIndicator className="text-white" />
+            ) : (
+              <Text>Registrar</Text>
+            )}
           </Button>
         </View>
       </View>
