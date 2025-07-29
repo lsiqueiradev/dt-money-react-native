@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/contexts/auth.context";
 import { useEffect } from "react";
-import { ActivityIndicator, Image, SafeAreaView } from "react-native";
+import { ActivityIndicator, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface LoadingProps {
   setLoading: (value: boolean) => void;

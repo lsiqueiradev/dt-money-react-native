@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { TransactionTypeSelector } from "../SelectyType";
 
 export function NewTransaction() {
-  const { closeBottomSheet } = useBottomSheetContext();
+  const { closeBottomSheet, openBottomSheet } = useBottomSheetContext();
   const [transaction, setTransaction] = useState<CreateTransactionInterface>({
     categoryId: 0,
     description: "",
@@ -31,7 +31,7 @@ export function NewTransaction() {
     <View className="px-8 py-5">
       <TouchableOpacity
         className="w-full flex-row items-center justify-between"
-        onPress={closeBottomSheet}
+        onPress={() => closeBottomSheet()}
       >
         <Text className="text-white text-xl font-bold">Nova transação</Text>
         <MaterialIcons name="close" className="text-gray-700" size={20} />

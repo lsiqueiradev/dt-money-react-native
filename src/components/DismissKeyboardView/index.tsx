@@ -2,10 +2,10 @@ import { PropsWithChildren } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  SafeAreaView,
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function DismissKeyboardView({ children }: PropsWithChildren) {
   return (

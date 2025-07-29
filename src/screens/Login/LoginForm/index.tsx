@@ -25,8 +25,8 @@ export function LoginForm() {
     formState: { isSubmitting },
   } = useForm<FormLoginParams>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: "lucas@lsiqueira.dev",
+      password: "password",
     },
     resolver: yupResolver(schema),
   });

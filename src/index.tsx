@@ -13,6 +13,7 @@ import { Snackbar } from "./components/Snackbar";
 import "@/styles/global.css";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { TransactionContextProvider } from "./contexts/transaction.context";
 
 cssInterop(MaterialIcons, {
   className: {
@@ -26,10 +27,12 @@ export function App() {
       <SafeAreaProvider className="flex-1 bg-background-primary">
         <SnackbarContextProvider>
           <AuthContextProvider>
-            <BottomSheetProvider>
-              <NavigationRoutes />
-              <Snackbar />
-            </BottomSheetProvider>
+            <TransactionContextProvider>
+              <BottomSheetProvider>
+                <NavigationRoutes />
+                <Snackbar />
+              </BottomSheetProvider>
+            </TransactionContextProvider>
           </AuthContextProvider>
         </SnackbarContextProvider>
       </SafeAreaProvider>

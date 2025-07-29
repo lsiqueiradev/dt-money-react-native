@@ -1,10 +1,13 @@
+import { useCallback, useState } from "react";
+
 import { NavigationContainer } from "@react-navigation/native";
 
 import { SystemBars } from "react-native-edge-to-edge";
 
 import { useAuthContext } from "@/contexts/auth.context";
+
 import { Loading } from "@/screens/Loading";
-import { useCallback, useState } from "react";
+
 import { PrivateRoutes } from "./PrivateRoutes";
 import { PublicRoutes } from "./PublicRoutes";
 
