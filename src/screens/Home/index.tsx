@@ -5,8 +5,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuthContext } from "@/contexts/auth.context";
 import { useTransactionContext } from "@/contexts/transaction.context";
 
-import { Header } from "@/components/Header";
 import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
+import { FlatList } from "react-native";
+import { ListHeader } from "./ListHeader";
 
 export function Home() {
   const { handleError } = useErrorHandler();
@@ -28,8 +29,12 @@ export function Home() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-background-primary ">
-      <Header />
+    <SafeAreaView className="flex-1 bg-background-secondary">
+      <FlatList
+        data={[]}
+        renderItem={() => <></>}
+        ListHeaderComponent={<ListHeader />}
+      />
     </SafeAreaView>
   );
 }
