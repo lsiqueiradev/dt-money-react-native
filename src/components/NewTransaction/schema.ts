@@ -7,7 +7,7 @@ export const transactionSchema = Yup.object().shape({
     .required("Valor é obrigatório"),
   typeId: Yup.number()
     .min(1, "Selecione um tipo de transação")
-    .required("Tipo de transação é obrigatória"),
+    .required("Tipo de transação é obrigatório"),
   categoryId: Yup.number()
     .min(1, "Selecione um categoria de transação")
     .required("Categoria de transação é obrigatória"),

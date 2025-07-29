@@ -11,6 +11,7 @@ import { CreateTransactionInterface } from "@/shared/interfaces/https/create-tra
 import clsx from "clsx";
 import * as Yup from "yup";
 import { Button } from "../Button";
+import { ErrorMessage } from "../ErrorMessage";
 import { SelectCategoryModal } from "../SelectCategoryModal";
 import { TransactionTypeSelector } from "../SelectyType";
 import { transactionSchema } from "./schema";
@@ -70,6 +71,9 @@ export function NewTransaction() {
           value={transaction.description}
           className="text-white native:placeholder:text-gray-700 text-lg h-[50px] bg-background-primary my-2 rounded-[6] pl-4"
         />
+        {validationErrors?.description && (
+          <ErrorMessage>{validationErrors?.description}</ErrorMessage>
+        )}
         <CurrencyInput
           className={clsx(
             "native:placeholder:text-gray-700 text-lg h-[50px] bg-background-primary my-2 rounded-[6] pl-4",
@@ -83,18 +87,28 @@ export function NewTransaction() {
           onChangeValue={(value) => handleSetTransaction("value", value ?? 0)}
           value={transaction.value}
         />
+
+        {validationErrors?.value && (
+          <ErrorMessage>{validationErrors?.value}</ErrorMessage>
+        )}
         <SelectCategoryModal
           selectedCategory={transaction.categoryId}
           onSelect={(categoryId) =>
             handleSetTransaction("categoryId", categoryId)
           }
         />
+        {validationErrors?.categoryId && (
+          <ErrorMessage>{validationErrors?.categoryId}</ErrorMessage>
+        )}
         <TransactionTypeSelector
           typeId={transaction.typeId}
           setTransactionType={(typeId) =>
             handleSetTransaction("typeId", typeId)
           }
         />
+        {validationErrors?.typeId && (
+          <ErrorMessage>{validationErrors?.typeId}</ErrorMessage>
+        )}
         <View className="my-4">
           <Button onPress={handleCreateTransaction}>
             <Text>Registrar</Text>
