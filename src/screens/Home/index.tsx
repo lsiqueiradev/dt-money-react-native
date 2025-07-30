@@ -58,7 +58,10 @@ export function Home() {
             onRefresh={refreshTransactions}
           />
         }
-        onEndReached={loadMoreTransactions}
+        onEndReached={() => {
+          loadMoreTransactions();
+          console.log("onEndReached");
+        }}
         onEndReachedThreshold={0.5}
       />
     </SafeAreaView>
