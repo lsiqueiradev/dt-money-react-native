@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -9,6 +9,8 @@ import { TransactionTypes } from "@/shared/enums/transactions-types";
 import { useTransactionContext } from "@/contexts/transaction.context";
 import { ICONS } from "./strategies/icon-strategy";
 import { CARD_DATA } from "./strategies/card-strategy";
+import { moneyMapper } from "@/shared/utils/money-mapper";
+import clsx from "clsx";
 
 export type TransactionCardType = TransactionTypes | "total";
 
@@ -29,9 +31,12 @@ export function TransactionCard({ type, amount }: TransactionCardProps) {
 
   return (
     <View
-      className={`${cardData.className} min-w-[280] rounded-[6] px-8 py-6 justify-between mr-6`}
+      className={clsx(
+        `${cardData.className} min-w-[280] rounded-[6] px-8 py-6 justify-between mr-6`,
+        type === "total" && "mr-6"
+      )}
     >
-      <View className="flex-row justify-between items-center mb-1">
+      <View className="flex-row justify-between items-center">
         <Text className="text-white text-base">{cardData.label}</Text>
         <MaterialIcons
           name={iconsData.name}
@@ -41,7 +46,7 @@ export function TransactionCard({ type, amount }: TransactionCardProps) {
       </View>
       <View>
         <Text className="text-2xl text-gray-400 font-bold">
-          R$ {amount.toFixed(2).replace(".", ",")}
+          R$ {moneyMapper(amount)}
         </Text>
         {type !== "total" && (
           <Text className="text-gray-700">
