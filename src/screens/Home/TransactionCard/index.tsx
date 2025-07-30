@@ -27,7 +27,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
     <StyledSwipleable
       containerClassName="items-center self-center overflow-hidden w-[90%] mb-4"
       renderRightActions={() => <RightAction transactionId={transaction.id} />}
-      renderLeftActions={() => <LeftAction />}
+      renderLeftActions={() => <LeftAction transaction={transaction} />}
       overshootRight={false}
       overshootLeft={false}
     >
