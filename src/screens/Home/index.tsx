@@ -21,16 +21,24 @@ export function Home() {
     }
   };
 
+  const handleFetchTransactions = async () => {
+    try {
+      await fetchTransactions();
+    } catch (error) {
+      handleError(error, "Falha ao buscar as transações");
+    }
+  };
+
   useEffect(() => {
     (async () => {
-      await handleFetchCategories();
-      await fetchTransactions();
+      await Promise.all([handleFetchCategories(), handleFetchTransactions()]);
     })();
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-background-secondary">
+    <SafeAreaView className="flex-1 bg-background-primary">
       <FlatList
+        className="bg-background-secondary"
         data={[]}
         renderItem={() => <></>}
         ListHeaderComponent={<ListHeader />}
