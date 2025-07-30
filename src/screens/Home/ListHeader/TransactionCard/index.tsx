@@ -44,7 +44,7 @@ export function TransactionCard({ type, amount }: TransactionCardProps) {
           R$ {amount.toFixed(2).replace(".", ",")}
         </Text>
         {type !== "total" && (
-          <Text>
+          <Text className="text-gray-700">
             {lastTransaction?.createdAt
               ? format(
                   lastTransaction?.createdAt,
