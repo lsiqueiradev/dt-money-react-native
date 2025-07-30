@@ -1,20 +1,19 @@
 import { useEffect } from "react";
 
+import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useAuthContext } from "@/contexts/auth.context";
 import { useTransactionContext } from "@/contexts/transaction.context";
 
 import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
-import { FlatList } from "react-native";
+
 import { ListHeader } from "./ListHeader";
 
 export function Home() {
   const { handleError } = useErrorHandler();
-  const { handleLogout } = useAuthContext();
-  const { fetchCategories } = useTransactionContext();
+  const { fetchCategories, fetchTransactions } = useTransactionContext();
 
-  const handleFetchCtegories = async () => {
+  const handleFetchCategories = async () => {
     try {
       await fetchCategories();
     } catch (error) {
@@ -24,7 +23,8 @@ export function Home() {
 
   useEffect(() => {
     (async () => {
-      await handleFetchCtegories();
+      await handleFetchCategories();
+      await fetchTransactions();
     })();
   }, []);
 
