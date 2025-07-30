@@ -19,6 +19,7 @@ export function Home() {
     transactions,
     refreshTransactions,
     isLoading,
+    loadMoreTransactions,
   } = useTransactionContext();
 
   const handleFetchCategories = async () => {
@@ -57,6 +58,8 @@ export function Home() {
             onRefresh={refreshTransactions}
           />
         }
+        onEndReached={loadMoreTransactions}
+        onEndReachedThreshold={0.5}
       />
     </SafeAreaView>
   );
