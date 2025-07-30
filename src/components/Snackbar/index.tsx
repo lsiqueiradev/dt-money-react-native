@@ -5,7 +5,7 @@ export function Snackbar() {
   const { message, type } = useSnackbarContext();
 
   if (!message || !type) {
-    return <></>;
+    return null;
   }
 
   const bgColor = `${
@@ -16,7 +16,7 @@ export function Snackbar() {
 
   return (
     <View
-      className={`absolute bottom-safe-offset-10 self-center w-[90%] h-[50px] rounded-xl ${bgColor} justify-center p-4 z-10`}
+      className={`absolute bottom-safe-offset-10 self-center w-[90%] h-[50px] rounded-xl ${bgColor} justify-center p-4 z-50`}
     >
       <Text className="text-white text-base font-bold">{message}</Text>
     </View>
