@@ -38,6 +38,22 @@ export function Home() {
     }
   };
 
+  const handleLoadMoreTransactions = async () => {
+    try {
+      await loadMoreTransactions();
+    } catch (error) {
+      handleError(error, "Falha ao carregar novas transações");
+    }
+  };
+
+  const handleRefreshTransactions = async () => {
+    try {
+      await refreshTransactions();
+    } catch (error) {
+      handleError(error, "Falha ao recarregar as transações");
+    }
+  };
+
   useEffect(() => {
     (async () => {
       await Promise.all([handleFetchCategories(), handleFetchTransactions()]);
@@ -55,13 +71,10 @@ export function Home() {
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
-            onRefresh={refreshTransactions}
+            onRefresh={handleRefreshTransactions}
           />
         }
-        onEndReached={() => {
-          loadMoreTransactions();
-          console.log("onEndReached");
-        }}
+        onEndReached={handleLoadMoreTransactions}
         onEndReachedThreshold={0.5}
       />
     </SafeAreaView>
