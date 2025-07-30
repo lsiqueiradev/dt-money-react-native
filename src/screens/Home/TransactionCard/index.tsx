@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { TransactionTypes } from "@/shared/enums/transactions-types";
 import clsx from "clsx";
 import { RightAction } from "./RightAction";
+import { LeftAction } from "./LeftAction";
 
 interface TransactionCardProps {
   transaction: ITransaction;
@@ -26,7 +27,9 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
     <StyledSwipleable
       containerClassName="items-center self-center overflow-hidden w-[90%] mb-4"
       renderRightActions={() => <RightAction transactionId={transaction.id} />}
+      renderLeftActions={() => <LeftAction />}
       overshootRight={false}
+      overshootLeft={false}
     >
       <View className="h-[140] bg-background-tertiary rounded-[6] p-6">
         <Text className="text-white text-base">{transaction.description}</Text>
