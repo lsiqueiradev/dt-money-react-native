@@ -32,7 +32,7 @@ export function TransactionCard({ type, amount }: TransactionCardProps) {
   return (
     <View
       className={clsx(
-        `${cardData.className} min-w-[280] rounded-[6] px-8 py-6 justify-between mr-6`,
+        `${cardData.className} min-w-[280] rounded-[6] px-8 py-6 justify-between mr-6 mb-4`,
         type === "total" && "mr-6"
       )}
     >

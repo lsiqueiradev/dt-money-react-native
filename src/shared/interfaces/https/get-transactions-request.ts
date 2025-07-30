@@ -1,6 +1,12 @@
 import { ITotalTransactions } from "../total-transaction-interface";
 import { ITransaction } from "../transaction-interface";
 
+export interface Pagination {
+  page: number;
+  perPage: number;
+  totalRows?: number;
+}
+
 export interface GetTransactionsParams {
   page: number;
   perPage: number;

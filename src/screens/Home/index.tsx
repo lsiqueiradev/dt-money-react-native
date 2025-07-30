@@ -9,11 +9,17 @@ import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
 
 import { ListHeader } from "./ListHeader";
 import { TransactionCard } from "./TransactionCard";
+import { RefreshControl } from "react-native-gesture-handler";
 
 export function Home() {
   const { handleError } = useErrorHandler();
-  const { fetchCategories, fetchTransactions, transactions } =
-    useTransactionContext();
+  const {
+    fetchCategories,
+    fetchTransactions,
+    transactions,
+    refreshTransactions,
+    isLoading,
+  } = useTransactionContext();
 
   const handleFetchCategories = async () => {
     try {
@@ -25,7 +31,7 @@ export function Home() {
 
   const handleFetchTransactions = async () => {
     try {
-      await fetchTransactions();
+      await fetchTransactions({ page: 1 });
     } catch (error) {
       handleError(error, "Falha ao buscar as transações");
     }
@@ -45,6 +51,12 @@ export function Home() {
         keyExtractor={(item) => `transaction-${item.id}`}
         renderItem={({ item }) => <TransactionCard transaction={item} />}
         ListHeaderComponent={<ListHeader />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={refreshTransactions}
+          />
+        }
       />
     </SafeAreaView>
   );
