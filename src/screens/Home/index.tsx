@@ -10,6 +10,7 @@ import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
 import { ListHeader } from "./ListHeader";
 import { TransactionCard } from "./TransactionCard";
 import { RefreshControl } from "react-native-gesture-handler";
+import { EmptyList } from "./EmptyList";
 
 export function Home() {
   const { handleError } = useErrorHandler();
@@ -93,6 +94,7 @@ export function Home() {
         }
         onEndReached={handleLoadMoreTransactions}
         onEndReachedThreshold={0.5}
+        ListEmptyComponent={EmptyList}
       />
     </View>
   );
