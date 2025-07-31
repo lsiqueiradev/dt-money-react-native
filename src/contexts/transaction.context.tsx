@@ -60,7 +60,7 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     useState<ITotalTransactions>({ expense: 0, revenue: 0, total: 0 });
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
-    perPage: 15,
+    perPage: 5,
     totalRows: 0,
     totalPages: 0,
   });

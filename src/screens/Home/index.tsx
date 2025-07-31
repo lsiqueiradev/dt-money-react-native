@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTransactionContext } from "@/contexts/transaction.context";
@@ -85,7 +85,16 @@ export function Home() {
         keyExtractor={(item) => `transaction-${item.id}`}
         renderItem={({ item }) => <TransactionCard transaction={item} />}
         contentContainerClassName="pb-safe"
-        ListHeaderComponent={<ListHeader />}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={
+          loadings.loadMore ? (
+            <ActivityIndicator
+              className="text-accent-brand-light"
+              size="large"
+            />
+          ) : null
+        }
+        ListEmptyComponent={loadings.initial ? null : EmptyList}
         refreshControl={
           <RefreshControl
             refreshing={loadings.refresh}
@@ -94,7 +103,6 @@ export function Home() {
         }
         onEndReached={handleLoadMoreTransactions}
         onEndReachedThreshold={0.5}
-        ListEmptyComponent={EmptyList}
       />
     </View>
   );
