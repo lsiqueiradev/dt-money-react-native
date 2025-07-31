@@ -26,7 +26,7 @@ export const BottomSheetContext = createContext<BottomSheetContextType>(
   {} as BottomSheetContextType
 );
 
-export const BottomSheetProvider = ({ children }: PropsWithChildren) => {
+export const BottomSheetContextProvider = ({ children }: PropsWithChildren) => {
   const { bottom } = useSafeAreaInsets();
   const [content, setContent] = useState<ReactNode | null>(null);
   const [index, setIndex] = useState(-1);

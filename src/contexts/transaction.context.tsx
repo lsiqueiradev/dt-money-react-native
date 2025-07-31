@@ -19,6 +19,17 @@ interface FetchTransactionsParams {
   page: number;
 }
 
+interface Loadings {
+  initial: boolean;
+  refresh: boolean;
+  loadMore: boolean;
+}
+
+interface HandleLoadingsParams {
+  key: keyof Loadings;
+  value: boolean;
+}
+
 export type TransactionContextType = {
   fetchCategories: () => Promise<void>;
   categories: TransactionCategory[];
@@ -28,8 +39,9 @@ export type TransactionContextType = {
   totalTransactions: ITotalTransactions;
   transactions: ITransaction[];
   refreshTransactions: () => Promise<void>;
-  isLoading: boolean;
   loadMoreTransactions: () => Promise<void>;
+  loadings: Loadings;
+  handleLoadings: (params: HandleLoadingsParams) => void;
 };
 
 export const TransactionContext = createContext<TransactionContextType>(
@@ -39,7 +51,11 @@ export const TransactionContext = createContext<TransactionContextType>(
 export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   const [categories, setCategories] = useState<TransactionCategory[]>([]);
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
-  const [isLoading, setLoading] = useState(false);
+  const [loadings, setLoadings] = useState<Loadings>({
+    initial: false,
+    refresh: false,
+    loadMore: false,
+  });
   const [totalTransactions, setTotalTransactions] =
     useState<ITotalTransactions>({ expense: 0, revenue: 0, total: 0 });
   const [pagination, setPagination] = useState<Pagination>({
@@ -49,9 +65,11 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
     totalPages: 0,
   });
 
+  const handleLoadings = ({ key, value }: HandleLoadingsParams) =>
+    setLoadings((prevValue) => ({ ...prevValue, [key]: value }));
+
   const refreshTransactions = useCallback(async () => {
     const { page, perPage } = pagination;
-    setLoading(true);
     const transactionResponse = await transactionService.getTransactions({
       page: 1,
       perPage: page * perPage,
@@ -64,7 +82,6 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
       totalRows: transactionResponse.totalRows,
       totalPages: transactionResponse.totalPages,
     });
-    setLoading(false);
   }, [pagination]);
 
   const fetchCategories = async () => {
@@ -75,7 +92,6 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
 
   const fetchTransactions = useCallback(
     async ({ page = 1 }: FetchTransactionsParams) => {
-      setLoading(true);
       const transactionResponse = await transactionService.getTransactions({
         page,
         perPage: pagination.perPage,
@@ -97,7 +113,6 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
         totalRows: transactionResponse.totalRows,
         totalPages: transactionResponse.totalPages,
       });
-      setLoading(false);
     },
     [pagination]
   );
@@ -113,15 +128,16 @@ export const TransactionContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const loadMoreTransactions = useCallback(async () => {
-    if (isLoading || pagination.page >= pagination.totalPages) return;
+    if (loadings.loadMore || pagination.page >= pagination.totalPages) return;
     fetchTransactions({ page: pagination.page + 1 });
-  }, [isLoading, pagination]);
+  }, [loadings.loadMore, pagination]);
 
   return (
     <TransactionContext.Provider
       value={{
         loadMoreTransactions,
-        isLoading,
+        loadings,
+        handleLoadings,
         fetchCategories,
         categories,
         fetchTransactions,
